@@ -180,6 +180,7 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
             <configuration>
+              <scanIntervalSeconds>1</scanIntervalSeconds>
               <systemProperties>
                 <application.mode>dev</application.mode>
                 <docs.home>../data/docs</docs.home>
@@ -188,9 +189,10 @@
                 <contextPath>/docs-web</contextPath>
                 <overrideDescriptor>${project.basedir}/src/dev/main/webapp/web-override.xml</overrideDescriptor>
               </webApp>
+
             </configuration>
           </plugin>
-          
+
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
@@ -199,6 +201,8 @@
               <reuseForks>false</reuseForks>
             </configuration>
           </plugin>
+
+
         </plugins>
       </build>
     </profile>

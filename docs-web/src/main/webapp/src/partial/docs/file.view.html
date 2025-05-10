@@ -20,7 +20,7 @@
       &nbsp;
     </button>
   </div>
-  
+
   <div class="btn-group pull-right">
     <button type="button" class="btn btn-default" uib-tooltip="Print this file" tooltip-append-to-body="true" ng-click="printFile()">
       <span class="fas fa-print"></span>
@@ -31,6 +31,11 @@
     <button type="button" class="btn btn-default" uib-tooltip="Show text content" tooltip-append-to-body="true" ng-click="openFileContent()">
       <span class="fas fa-eye"></span>
     </button>
+      <button type="button" class="btn btn-default"
+              uib-tooltip="Edit this image" tooltip-append-to-body="true"
+              ng-click="openImageEditor()">
+          <span class="fas fa-edit"></span>
+      </button>
   </div>
 </div>
 
@@ -57,4 +62,23 @@
     <span class="fas fa-exclamation-triangle"></span>
     {{ 'file.view.not_found' | translate }}
   </p>
+</div>
+
+<!--<div ng-if="editingImage" class="image-editor">-->
+<!--  <canvas id="editorCanvas" style="border: 1px solid #ccc;"></canvas>-->
+  <div id="imageEditorContainer" style="position: relative; display: inline-block;" ng-if="editingImage">
+    <img id="previewImage" ng-src="../api/file/{{ $stateParams.fileId }}/data?size=web"
+         style="display: block; max-width: 100%; height: auto;border: 1px solid #ccc;" />
+
+    <!-- 覆盖在图片上的 canvas -->
+    <canvas id="editorOverlayCanvas"
+            style="position: absolute; top: 0; left: 0; pointer-events: auto;"></canvas>
+  </div>
+
+  <div class="editor-tools">
+    <button ng-click="cropImage()">Crop</button>
+    <button ng-click="drawMode = !drawMode">{{ drawMode ? 'Disable Draw' : 'Enable Draw' }}</button>
+    <button ng-click="saveImageWithOverlay()">Save</button>
+    <button ng-click="editingImage = false">Cancel</button>
+  </div>
 </div>

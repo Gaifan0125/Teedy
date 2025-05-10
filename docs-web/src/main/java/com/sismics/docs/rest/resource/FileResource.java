@@ -638,7 +638,8 @@ public class FileResource extends BaseResource {
 
         Response.ResponseBuilder builder = Response.ok(stream)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getFullName("data") + "\"")
-                .header(HttpHeaders.CONTENT_TYPE, mimeType);
+                .header(HttpHeaders.CONTENT_TYPE, mimeType)
+                .header("Access-Control-Allow-Origin", "*");
         if (decrypt) {
             // Cache real files
             builder.header(HttpHeaders.CACHE_CONTROL, "private")
