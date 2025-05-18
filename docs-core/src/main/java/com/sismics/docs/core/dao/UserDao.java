@@ -233,6 +233,28 @@ public class UserDao {
             return null;
         }
     }
+//register function
+    public static List<User> getUserByStatus(String status) {
+        EntityManager em = ThreadLocalContext.get().getEntityManager();
+        try {
+            Query q = em.createQuery("select u from User u where u.email = :status and u.deleteDate is null");
+            q.setParameter("status", status);
+            return (List<User>) q.getResultList();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+    public static  void updateStatus(String username,String status) {
+        EntityManager em = ThreadLocalContext.get().getEntityManager();
+
+        // Get the user
+        Query q = em.createQuery("select u from User u where u.username = :username and u.deleteDate is null");
+        q.setParameter("username", username);
+        User userDb = (User) q.getSingleResult();
+
+        // Update the user
+        userDb.setEmail(status);
+    }
     
     /**
      * Deletes a user.

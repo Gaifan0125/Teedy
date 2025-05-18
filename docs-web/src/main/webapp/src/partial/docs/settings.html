@@ -2,6 +2,9 @@
   <div class="col-md-3 settings-menu">
     <div class="panel panel-default">
       <div class="panel-heading"><strong>{{ 'settings.menu_personal_settings' | translate }}</strong></div>
+      <button type="button" class="btn btn-secondary" ng-click="seeUser()">
+        <span class="fas fa-user-plus"></span> check pending users
+      </button>
       <ul class="list-group">
         <a class="list-group-item" ui-sref-active="{ active: 'settings.account.**' }" href="#/settings/account">{{ 'settings.menu_user_account' | translate }}</a>
         <a class="list-group-item" ui-sref-active="{ active: 'settings.security.**' }" href="#/settings/security">{{ 'settings.menu_two_factor_auth' | translate }}</a>

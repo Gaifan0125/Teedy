@@ -1,0 +1,29 @@
+<!-- partial/docs/register.html -->
+<div class="register-container">
+    <h2>register</h2>
+    <form name="registerForm" ng-submit="submit()" novalidate>
+        <!-- 用户名 -->
+        <div class="form-group">
+            <input type="text" class="form-control"
+                   ng-model="user.username"
+                   placeholder="username"
+                   required>
+        </div>
+        <!-- 密码 -->
+        <div class="form-group">
+            <input type="password" class="form-control"
+                   ng-model="user.password"
+                   placeholder="password"
+                   required>
+        </div>
+        <!-- 提交按钮 -->
+        <button type="submit" class="btn btn-primary"
+                ng-disabled="registerForm.$invalid" >
+          submit
+        </button>
+        <!-- 错误提示 -->
+        <div class="alert alert-danger mt-3" ng-if="error">
+            {{ error }}
+        </div>
+    </form>
+</div>

@@ -11,6 +11,11 @@ angular.module('docs').controller('Login', function(Restangular, $scope, $rootSc
     $rootScope.app = data;
   });
 
+  //===================register function====================================
+  $scope.goToRegister = function() {
+    $state.go('register');
+  };
+
   // Login as guest
   $scope.loginAsGuest = function() {
     $scope.user = {

@@ -30,6 +30,11 @@ angular.module('docs').factory('User', function(Restangular) {
      */
     logout: function() {
       return Restangular.one('user').post('logout', {});
+    },
+    //================register function=============
+    submitRegistration: function(user) {
+      return Restangular.one('user').post('register',user);
+      // 对应后端API路径
     }
   }
 });

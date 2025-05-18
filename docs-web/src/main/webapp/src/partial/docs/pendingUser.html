@@ -1,0 +1,23 @@
+<div class="container">
+    <h2>Pending User Registration Requests</h2>
+
+    <table class="table table-bordered" ng-if="pendingUsers.length > 0">
+        <thead>
+        <tr>
+            <th>Username</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="user in pendingUsers">
+            <td>{{ user.username }}</td>
+            <td>
+                <button class="btn btn-success" ng-click="approve(user.username, true)">Approve</button>
+                <button class="btn btn-danger" ng-click="approve(user.username, false)">Reject</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p ng-if="pendingUsers.length === 0">No pending users.</p>
+</div>

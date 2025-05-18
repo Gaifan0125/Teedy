@@ -32,6 +32,7 @@ import com.sismics.util.totp.GoogleAuthenticator;
 import com.sismics.util.totp.GoogleAuthenticatorKey;
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.servlet.http.Cookie;
 import jakarta.ws.rs.*;
@@ -120,6 +121,86 @@ public class UserResource extends BaseResource {
                 .add("status", "ok");
         return Response.ok().entity(response.build()).build();
     }
+
+    @POST
+    @Path("register")
+    public Response register1(
+            @FormParam("username") String username,
+            @FormParam("password") String password
+            ) {
+        System.out.println("in register");
+//        if (!authenticate()) {
+//            throw new ForbiddenClientException();
+//        }
+        //checkBaseFunction(BaseFunction.ADMIN);
+        System.out.println("name"+username);
+
+        // Validate the input data
+        username = ValidationUtil.validateLength(username, "username", 3, 50);
+        ValidationUtil.validateUsername(username, "username");
+        password = ValidationUtil.validateLength(password, "password", 8, 50);
+
+
+        // Create the user
+        User user = new User();
+        user.setRoleId(Constants.DEFAULT_USER_ROLE);
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setEmail("pending");
+        user.setStorageQuota(123456L);
+        user.setOnboarding(true);
+
+        // Create the user
+        UserDao userDao = new UserDao();
+        try {
+            userDao.create(user, "1234");
+        } catch (Exception e) {
+            if ("AlreadyExistingUsername".equals(e.getMessage())) {
+                throw new ClientException("AlreadyExistingUsername", "Login already used", e);
+            } else {
+                throw new ServerException("UnknownError", "Unknown server error", e);
+            }
+        }
+
+        // Always return OK
+        JsonObjectBuilder response = Json.createObjectBuilder()
+                .add("status", "ok");
+        return Response.ok().entity(response.build()).build();
+    }
+    @GET
+    @Path("pendingUser")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPendingUsers() {
+        System.out.println("in pending");
+        //checkBaseFunction(BaseFunction.ADMIN); // 确保只有 admin 能访问
+        List<User> pendingUsers = UserDao.getUserByStatus("pending");
+
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        for (User user : pendingUsers) {
+            arrayBuilder.add(Json.createObjectBuilder()
+                    .add("username", user.getUsername())
+                    .add("password", user.getPassword()));
+        }
+
+        return Response.ok(arrayBuilder.build()).build();
+    }
+    @POST
+    @Path("approve")
+    public Response approveUser(@QueryParam("userName") String userName,
+                                @QueryParam("approve") boolean approve) {
+        System.out.println("in approve: " + userName + ", " + approve);
+
+        //checkBaseFunction(BaseFunction.ADMIN);
+        if (approve) {
+            UserDao.updateStatus(userName, "approving");
+        } else {
+            UserDao.updateStatus(userName, "reject");
+        }
+
+        return Response.ok().build();
+    }
+
+
 
     /**
      * Updates the current user informations.
@@ -287,6 +368,7 @@ public class UserResource extends BaseResource {
         @FormParam("password") String password,
         @FormParam("code") String validationCodeStr,
         @FormParam("remember") boolean longLasted) {
+
         // Validate the input data
         username = StringUtils.strip(username);
         password = StringUtils.strip(password);
@@ -304,6 +386,9 @@ public class UserResource extends BaseResource {
             user = AuthenticationUtil.authenticate(username, password);
         }
         if (user == null) {
+            throw new ForbiddenClientException();
+        }
+        if(!username.equals("admin")&&!user.getEmail().equals("approving")){
             throw new ForbiddenClientException();
         }
 

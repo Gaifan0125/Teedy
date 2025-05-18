@@ -364,6 +364,26 @@ angular.module('docs',
         }
       }
     })
+      // =============================register function======================
+      .state('register', {
+        url: '/register',
+        views: {
+          'page': {
+            templateUrl: 'partial/docs/register.html',
+            controller: 'RegisterController'
+          }
+        }
+      })
+      .state('pendingUser', {
+        url: '/pendingUser',
+        views: {
+          'page': {
+            templateUrl: 'partial/docs/pendingUser.html',
+            controller: 'PendingUser'
+          }
+        }
+      })
+
     .state('user', {
       url: '/user',
       abstract: true,
